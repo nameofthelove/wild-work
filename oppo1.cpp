@@ -13,7 +13,6 @@ private:
         string name;
         string date;
         int cost;
-
         RealEstate(const string& name_, const string& date_, int cost_) : name(name_), date(date_), cost(cost_) {}
     };
     vector<RealEstate> estateData;
