@@ -30,7 +30,7 @@ public:
 
         if (regex_search(s, match, namePattern)) name = match.str();
         if (regex_search(s, match, datePattern)) date = match.str();
-        string remaining = regex_replace(s, datePattern, "");
+        string remaining = regex_replace(s, datePattern, ""); 
         if (regex_search(remaining, match, costPattern)) cost = stoi(match.str());
 
         if (!name.empty() && !date.empty() && cost != 0) {
@@ -50,33 +50,30 @@ public:
         }
     }
 
-    // Функция для фильтрации и сортировки списка недвижимости по цене
-    void filter_and_sort(int minPrice, int maxPrice) {
-        // Фильтруем недвижимость по заданному диапазону цен
-        vector<RealEstate> filteredEstates;
+    void gap(int minPrice, int maxPrice) const {
+        vector<RealEstate> filteredData;
         for (const auto& estate : estateData) {
             if (estate.cost >= minPrice && estate.cost <= maxPrice) {
-                filteredEstates.push_back(estate);
+                filteredData.push_back(estate);
             }
         }
 
-        // Сортируем от минимальной к максимальной цене
-        sort(filteredEstates.begin(), filteredEstates.end(), [](const RealEstate& a, const RealEstate& b) {
-            return a.cost < b.cost;
-            });
+        if (!filteredData.empty()) {
+            sort(filteredData.begin(), filteredData.end(), [](const RealEstate& a, const RealEstate& b) {
+                return a.cost < b.cost;
+                });
 
-        // Выводим отфильтрованные и отсортированные данные
-        if (!filteredEstates.empty()) {
-            cout << "Отфильтрованная недвижимость (цены от " << minPrice << " до " << maxPrice << "):" << endl;
-            for (const auto& estate : filteredEstates) {
+            for (const auto& estate : filteredData) {
                 printf("%s %s %d\n", estate.name.c_str(), estate.date.c_str(), estate.cost);
             }
         }
         else {
-            cout << "Нет недвижимости в заданном диапазоне цен." << endl;
+            cout << "Нет данных для вывода в заданном диапазоне цен." << endl;
         }
     }
+
 };
+
 
 int main() {
     setlocale(LC_ALL, "Russian");
@@ -96,12 +93,13 @@ int main() {
 
     result.cout_result();
 
-    // Пример вызова функции фильтрации и сортировки
-    int minPrice;
-    int maxPrice;
-    cout << "Введите минимальную и максимальную цену: ";
-    cin >> minPrice >> maxPrice;
-    result.filter_and_sort(minPrice, maxPrice);
+    int minPrice, maxPrice;
+    cout << "Введите минимальную цену: ";
+    cin >> minPrice;
+    cout << "Введите максимальную цену: ";
+    cin >> maxPrice;
+
+    result.gap(minPrice, maxPrice);
 
     return 0;
 }
