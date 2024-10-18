@@ -44,7 +44,8 @@ public:
     }
 
     int extract_cost(const string& s) {
-        regex costPattern(R"(\b\d{3,}\b)");
+
+        regex costPattern(R"(\b\d{3,}\b)"); 
         smatch match;
         if (regex_search(s, match, costPattern)) {
             return stoi(match.str());
@@ -78,19 +79,28 @@ public:
         }
     }
 
+
     static bool compare(const RealEstate& a, const RealEstate& b) {
         return a.cost < b.cost;
     }
-
-    void filter(int min_price, int max_price) const {
-        vector<RealEstate> data;
-        for (const auto& f : estateData) {
-            if (f.cost >= min_price && f.cost <= max_price) data.push_back(f);
+          
+    void gap(int minPrice, int maxPrice) const {
+        vector<RealEstate> filteredData;
+        for (const auto& estate : estateData) {
+            if (estate.cost >= minPrice && estate.cost <= maxPrice) {
+                filteredData.push_back(estate);
+            }
         }
-        sort(data.begin(), data.end(), compare); // Используем статическую функцию compare
-        if (!data.empty()) {
-            cout << "Недвижимость в диапазоне цен от " << min_price << " до " << max_price << ":" << endl;
-            for (const auto& f : data) cout << f << endl;
+
+        if (!filteredData.empty()) {
+            sort(filteredData.begin(), filteredData.end(), compare);
+
+            for (const auto& estate : filteredData) {
+                cout << estate << endl;
+            }
+        }
+        else {
+            cout << "Нет данных для вывода в заданном диапазоне цен." << endl;
         }
     }
 };
@@ -113,11 +123,15 @@ int main() {
 
     result.cout_result();
 
-    int minn, maxx;
-    cout << "Введите минимальную цену и максимальную цену: ";
-    cin >> minn >> maxx;
-    result.filter(minn, maxx);
 
-    file_in.close();
+    int minPrice, maxPrice;
+    cout << "Введите минимальную цену: ";
+    cin >> minPrice;
+    cout << "Введите максимальную цену: ";
+    cin >> maxPrice;
+
+    result.gap(minPrice, maxPrice);
+
     return 0;
 }
+
