@@ -79,29 +79,27 @@ public:
         }
     }
 
-
-    static bool compare(const RealEstate& a, const RealEstate& b) {
-        return a.cost < b.cost;
-    }
-          
     void gap(int minPrice, int maxPrice) const {
-        vector<RealEstate> filteredData;
-        for (const auto& estate : estateData) {
-            if (estate.cost >= minPrice && estate.cost <= maxPrice) {
-                filteredData.push_back(estate);
-            }
+    vector<RealEstate> filteredData;
+    for (const auto& estate : estateData) {
+        if (estate.cost >= minPrice && estate.cost <= maxPrice) {
+            filteredData.push_back(estate);
         }
+    }
 
-        if (!filteredData.empty()) {
-            sort(filteredData.begin(), filteredData.end(), compare);
+    if (!filteredData.empty()) {
+        sort(filteredData.begin(), filteredData.end(), [](const RealEstate& a, const RealEstate& b) {
+            return a.cost < b.cost;
+            });
 
-            for (const auto& estate : filteredData) {
-                cout << estate << endl;
-            }
+        for (const auto& estate : filteredData) {
+            cout << estate << endl;
         }
-        else {
-            cout << "Нет данных для вывода в заданном диапазоне цен." << endl;
-        }
+    }
+    else {
+        cout << "Нет данных для вывода в заданном диапазоне цен." << endl;
+    }
+}
     }
 };
 
