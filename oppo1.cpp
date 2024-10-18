@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <regex>
@@ -44,7 +44,9 @@ public:
     }
 
     int extract_cost(const string& s) {
-        regex costPattern(R"(\b\d{3,}\b)"); 
+
+        regex costPattern(R"(\b\d{3,}\b)");
+
         smatch match;
         if (regex_search(s, match, costPattern)) {
             return stoi(match.str());
@@ -78,6 +80,7 @@ public:
         }
     }
 
+
     void gap(int minPrice, int maxPrice) const {
         vector<RealEstate> filteredData;
         for (const auto& estate : estateData) {
@@ -91,12 +94,16 @@ public:
                 return a.cost < b.cost;
                 });
 
-            for (const auto& estate : filteredData) {
-                cout << estate << endl;
-            }
+
+    void filter(int min_price, int max_price) const {
+        vector<RealEstate> data;
+        for (const auto& f : estateData) {
+            if (f.cost >= min_price && f.cost <= max_price) data.push_back(f);
         }
-        else {
-            cout << "Нет данных для вывода в заданном диапазоне цен." << endl;
+        sort(data.begin(), data.end(), compare); // Используем статическую функцию compare
+        if (!data.empty()) {
+            cout << "Недвижимость в диапазоне цен от " << min_price << " до " << max_price << ":" << endl;
+            for (const auto& f : data) cout << f << endl;
         }
     }
 };
@@ -119,6 +126,7 @@ int main() {
 
     result.cout_result();
 
+
     int minPrice, maxPrice;
     cout << "Введите минимальную цену: ";
     cin >> minPrice;
@@ -127,7 +135,7 @@ int main() {
 
     result.gap(minPrice, maxPrice);
 
+
     file_in.close();
     return 0;
 }
-
