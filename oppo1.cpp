@@ -44,6 +44,7 @@ public:
     }
 
     int extract_cost(const string& s) {
+
         regex costPattern(R"(\b\d{3,}\b)"); 
         smatch match;
         if (regex_search(s, match, costPattern)) {
@@ -78,6 +79,11 @@ public:
         }
     }
 
+
+    static bool compare(const RealEstate& a, const RealEstate& b) {
+        return a.cost < b.cost;
+    }
+          
     void gap(int minPrice, int maxPrice) const {
         vector<RealEstate> filteredData;
         for (const auto& estate : estateData) {
@@ -87,9 +93,7 @@ public:
         }
 
         if (!filteredData.empty()) {
-            sort(filteredData.begin(), filteredData.end(), [](const RealEstate& a, const RealEstate& b) {
-                return a.cost < b.cost;
-                });
+            sort(filteredData.begin(), filteredData.end(), compare);
 
             for (const auto& estate : filteredData) {
                 cout << estate << endl;
@@ -118,6 +122,7 @@ int main() {
     }
 
     result.cout_result();
+
 
     int minPrice, maxPrice;
     cout << "Введите минимальную цену: ";
