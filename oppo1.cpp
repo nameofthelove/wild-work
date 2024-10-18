@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <regex>
@@ -44,7 +44,9 @@ public:
     }
 
     int extract_cost(const string& s) {
+
         regex costPattern(R"(\b\d{3,}\b)");
+
         smatch match;
         if (regex_search(s, match, costPattern)) {
             return stoi(match.str());
@@ -78,9 +80,20 @@ public:
         }
     }
 
-    static bool compare(const RealEstate& a, const RealEstate& b) {
-        return a.cost < b.cost;
-    }
+
+    void gap(int minPrice, int maxPrice) const {
+        vector<RealEstate> filteredData;
+        for (const auto& estate : estateData) {
+            if (estate.cost >= minPrice && estate.cost <= maxPrice) {
+                filteredData.push_back(estate);
+            }
+        }
+
+        if (!filteredData.empty()) {
+            sort(filteredData.begin(), filteredData.end(), [](const RealEstate& a, const RealEstate& b) {
+                return a.cost < b.cost;
+                });
+
 
     void filter(int min_price, int max_price) const {
         vector<RealEstate> data;
@@ -113,10 +126,15 @@ int main() {
 
     result.cout_result();
 
-    int minn, maxx;
-    cout << "Введите минимальную цену и максимальную цену: ";
-    cin >> minn >> maxx;
-    result.filter(minn, maxx);
+
+    int minPrice, maxPrice;
+    cout << "Введите минимальную цену: ";
+    cin >> minPrice;
+    cout << "Введите максимальную цену: ";
+    cin >> maxPrice;
+
+    result.gap(minPrice, maxPrice);
+
 
     file_in.close();
     return 0;
